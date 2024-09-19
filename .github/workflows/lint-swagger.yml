@@ -3,10 +3,14 @@ on:
   pull_request:
     branches:
       - master
+  push:
+    branches:
+      - master
 jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
       - name: OpenAPI Lint Checks
         uses: nwestfall/openapi-action@v1.0.2
         with:
