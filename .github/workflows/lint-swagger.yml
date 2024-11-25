@@ -1,18 +1,21 @@
 name: Validate OpenAPI file
 on:
-  pull_request:
+  pull_request_target:
+    paths:
+      - '**.yaml'
     branches:
       - master
-  push:
-    branches:
-      - master
+    types: [opened, synchronize, edited, reopened]
+
 jobs:
-  lint:
+  rate-my-open-api:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: OpenAPI Lint Checks
-        uses: nwestfall/openapi-action@v1.0.2
+      - uses: actions/checkout@v4
+      - uses: zuplo/rmoa-action@v1
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          file: swagger.yaml
+          filepath: './swagger.yaml'
+          apikey: ${{ secrets.RMOA_API_KEY }}
+          max-errors: 0
+      - name: Rate My Open API
+        run: rmoa lint
